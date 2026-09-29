@@ -124,6 +124,37 @@ def browse_output():
         entry_output.insert(0, path)
 
 
+def copy_pages(event=None):
+    # Выделенный фрагмент или всё поле, если выделения нет.
+    try:
+        if entry_pages.selection_present():
+            start = entry_pages.index("sel.first")
+            end = entry_pages.index("sel.last")
+            text = entry_pages.get()[start:end]
+        else:
+            text = entry_pages.get()
+        entry_pages.clipboard_clear()
+        entry_pages.clipboard_append(text)
+    except tk.TclError:
+        pass
+    return "break"
+
+
+def show_pages_menu(event):
+    entry_pages.focus_set()
+    try:
+        menu_pages.tk_popup(event.x_root, event.y_root)
+    finally:
+        menu_pages.grab_release()
+    return "break"
+
+
+def copy_pages_ctrl(event):
+    # На Windows keycode 67 — клавиша C при любой раскладке.
+    if event.keycode == 67:
+        return copy_pages()
+
+
 # === Поддержка перетаскивания файла (Windows) ===
 def enable_drag_and_drop(window):
     try:
@@ -166,9 +197,28 @@ entry_output.grid(row=1, column=1, padx=5, pady=10)
 tk.Button(root, text="Выбрать", command=browse_output).grid(row=1, column=2, padx=5)
 
 tk.Label(root, text="Начальные страницы (через запятую):").grid(row=2, column=0, padx=10, pady=10, sticky="w")
-entry_pages = tk.Entry(root, width=65)
+entry_pages = tk.Entry(root, width=65, exportselection=False)
 entry_pages.grid(row=2, column=1, columnspan=2, padx=5, pady=10)
 entry_pages.insert(0, "1,5,12,20")
+
+menu_pages = tk.Menu(entry_pages, tearoff=0)
+menu_pages.add_command(label="Вырезать", command=lambda: entry_pages.event_generate("<<Cut>>"))
+menu_pages.add_command(label="Копировать", command=copy_pages)
+menu_pages.add_command(label="Вставить", command=lambda: entry_pages.event_generate("<<Paste>>"))
+menu_pages.add_separator()
+menu_pages.add_command(label="Выделить всё", command=lambda: entry_pages.select_range(0, tk.END))
+entry_pages.bind("<Button-3>", show_pages_menu)
+if sys.platform == "darwin":
+    entry_pages.bind("<Button-2>", show_pages_menu)
+    entry_pages.bind("<Control-Button-1>", show_pages_menu)
+for _seq in (
+    "<Control-c>", "<Control-C>", "<Control-Insert>",
+    "<Command-c>", "<Command-C>",
+    "<Control-Cyrillic_es>", "<Control-Cyrillic_ES>",
+):
+    entry_pages.bind(_seq, copy_pages)
+if sys.platform == "win32":
+    entry_pages.bind("<Control-KeyPress>", copy_pages_ctrl)
 
 # Чекбокс "Обрезать обложки": исключить 1,2 и два последних листа из разбиения
 var_trim = tk.BooleanVar(value=False)

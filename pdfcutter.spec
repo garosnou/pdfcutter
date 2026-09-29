@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['h:\\pdfcutter\\pdfcutter.py'],
+    ['pdfcutter.py'],
     pathex=[],
     binaries=[],
     datas=[],

@@ -26,7 +26,9 @@ python -m venv .venv
 .\.venv\Scripts\pip install pyinstaller
 .\.venv\Scripts\pyinstaller --noconfirm --onefile --noconsole --name pdfcutter --hidden-import windnd pdfcutter.py
 ```
-Готовый файл будет в `dist/pdfcutter.exe`.
+Готовый `dist/pdfcutter.exe` уже лежит в репозитории. На Windows запустите его двойным щелчком — Python не нужен.
+
+Пересобрать exe после изменений в коде: `build_exe.bat` (те же команды, что выше). Файл снова окажется в `dist/pdfcutter.exe`.
 
 Использование
 1. Запустите приложение.
