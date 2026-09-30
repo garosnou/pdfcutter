@@ -1,12 +1,14 @@
 # -*- mode: python ; coding: utf-8 -*-
+from PyInstaller.utils.hooks import collect_all
 
+dnd_datas, dnd_binaries, dnd_hiddenimports = collect_all('tkinterdnd2')
 
 a = Analysis(
-    ['h:\\pdfcutter\\pdfcutter.py'],
+    ['pdfcutter.py'],
     pathex=[],
-    binaries=[],
-    datas=[],
-    hiddenimports=['windnd'],
+    binaries=dnd_binaries,
+    datas=dnd_datas,
+    hiddenimports=dnd_hiddenimports,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
