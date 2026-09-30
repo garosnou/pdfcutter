@@ -3,6 +3,9 @@ PDFCutter
 
 Небольшое настольное приложение на Python/Tkinter для разбиения PDF-файла на части по указанным стартовым страницам. Поддерживает перетаскивание PDF в окно и опцию «Обрезать обложки» (исключает 1, 2 и два последних листа с пересчётом нумерации).
 
+Скачать
+Готовый `pdfcutter.exe` (Windows, Python не нужен) — на странице [Releases](https://github.com/garosnou/pdfcutter/releases/latest).
+
 Возможности
 - Ввод начальных страниц разбиения: `1,5,12,20`.
 - Предпросмотр: ещё до нарезки видно, какие файлы и с какими диапазонами страниц получатся.
@@ -27,7 +30,7 @@ python -m venv .venv
 .\.venv\Scripts\python -m pip install pyinstaller
 .\.venv\Scripts\python -m PyInstaller --noconfirm pdfcutter.spec
 ```
-Готовый файл будет в `dist/pdfcutter.exe`. Собирайте именно через `pdfcutter.spec`: в нём подключаются нативные библиотеки `tkdnd`, без которых drag & drop в `.exe` не заработает.
+Готовый файл будет в `dist/pdfcutter.exe` (в git не хранится, выкладывается через Releases). Собирайте именно через `pdfcutter.spec`: в нём подключаются нативные библиотеки `tkdnd`, без которых drag & drop в `.exe` не заработает.
 
 Использование
 1. Запустите приложение.
