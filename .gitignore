@@ -1,1 +1,5 @@
 /out_test
+.venv/
+build/
+__pycache__/
+*.pyc
