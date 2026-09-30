@@ -30,7 +30,16 @@ python -m venv .venv
 .\.venv\Scripts\python -m pip install pyinstaller
 .\.venv\Scripts\python -m PyInstaller --noconfirm pdfcutter.spec
 ```
-Готовый файл будет в `dist/pdfcutter.exe` (в git не хранится, выкладывается через Releases). Собирайте именно через `pdfcutter.spec`: в нём подключаются нативные библиотеки `tkdnd`, без которых drag & drop в `.exe` не заработает.
+Готовый файл будет в `dist/pdfcutter.exe` (в git не хранится, выкладывается через Releases).
+
+Выпуск релиза (автоматически)
+```
+git tag v1.1.0
+git push origin v1.1.0
+```
+GitHub Actions ([`.github/workflows/release.yml`](.github/workflows/release.yml)) сам соберёт `pdfcutter.exe` и создаст релиз с описанием изменений. Проверить сборку без релиза можно вручную: вкладка Actions → Release → Run workflow.
+
+ Собирайте именно через `pdfcutter.spec`: в нём подключаются нативные библиотеки `tkdnd`, без которых drag & drop в `.exe` не заработает.
 
 Использование
 1. Запустите приложение.

@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  # Ручной запуск: только проверяет сборку и сохраняет .exe как артефакт, релиз не создаёт
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Установка зависимостей
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pyinstaller
+
+      - name: Сборка pdfcutter.exe
+        run: python -m PyInstaller --noconfirm pdfcutter.spec
+
+      - name: Проверка, что .exe собрался
+        shell: pwsh
+        run: |
+          $exe = Get-Item dist/pdfcutter.exe
+          Write-Host "pdfcutter.exe: $([math]::Round($exe.Length / 1MB, 1)) MB"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pdfcutter
+          path: dist/pdfcutter.exe
+
+      - name: Создание релиза
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist/pdfcutter.exe --title "PDF Cutter ${{ github.ref_name }}" --generate-notes
